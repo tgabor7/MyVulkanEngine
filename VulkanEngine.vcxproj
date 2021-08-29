@@ -148,15 +148,27 @@
   <ItemGroup>
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="myve_device.cpp" />
+    <ClCompile Include="myve_pipeline.cpp" />
+    <ClCompile Include="myve_renderer.cpp" />
+    <ClCompile Include="myve_shader.cpp" />
     <ClCompile Include="myve_swapchain.cpp" />
     <ClCompile Include="myve_window.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.hpp" />
+    <ClInclude Include="myve_pipeline.hpp" />
+    <ClInclude Include="myve_renderer.hpp" />
+    <ClInclude Include="myve_shader.hpp" />
     <ClInclude Include="myve_swapchain.hpp" />
     <ClInclude Include="myve_window.hpp" />
     <ClInclude Include="myve_device.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\simple_shader.frag" />
+    <None Include="shaders\simple_shader.frag.spv" />
+    <None Include="shaders\simple_shader.vert" />
+    <None Include="shaders\simple_shader.vert.spv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

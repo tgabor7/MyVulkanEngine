@@ -14,8 +14,6 @@ namespace myve {
 		initWindow();
 		initVulkan();
 		createSurface();
-		createDevice();
-		createSwapchain();
 	}
 	bool Window::shouldClose()
 	{
@@ -25,14 +23,7 @@ namespace myve {
 	{
 		glfwPollEvents();
 	}
-	void Window::createDevice()
-	{
-		device = std::make_unique<Device>(instance, surface);
-	}
-	void Window::createSwapchain()
-	{
-		swapchain = std::make_unique<Swapchain>(*device, window);
-	}
+
 	void Window::initWindow()
 	{
 		glfwInit();
@@ -68,7 +59,7 @@ namespace myve {
 		return true;
 	}
 
-	void Window::initVulkan() 
+	void Window::initVulkan()
 	{
 		createInstance();
 		setupDebugMessenger();
@@ -178,20 +169,20 @@ namespace myve {
 			throw std::runtime_error("failed to create window surface!");
 		}
 	}
-	Window::~Window()
+	void Window::cleanUp()
 	{
-		swapchain->cleanUp();
-		device->cleanUp();
-
 		if (enableValidationLayers) {
 			DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 		}
-		
+
 		vkDestroySurfaceKHR(instance, surface, nullptr);
 
 		vkDestroyInstance(instance, nullptr);
 
 		glfwDestroyWindow(window);
 		glfwTerminate();
+	}
+	Window::~Window()
+	{
 	}
 }

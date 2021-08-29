@@ -24,7 +24,8 @@ namespace myve
 		VkSurfaceKHR getSurface() const { return surface; }
 		VkPhysicalDevice getPhysicalDevice() const { return physicalDevice; }
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-
+		VkQueue getPresentQueue() const { return presentQueue; }
+		VkQueue getGraphicsQueue() const { return graphicsQueue; }
 
 		void cleanUp();
 

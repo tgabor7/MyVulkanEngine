@@ -16,6 +16,12 @@ namespace myve
 		~Swapchain();
 
 		void cleanUp();
+		
+		VkExtent2D getExtent() const { return swapChainExtent; }
+		VkFormat getImageFormat() const { return swapChainImageFormat; }
+		std::vector<VkImageView> getSwapChainImageViews() const { return swapChainImageViews; }
+		size_t getSwapChainImageCount() const { return swapChainImageViews.size(); }
+		VkSwapchainKHR getSwapchain() const { return swapChain; }
 
 		static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
 

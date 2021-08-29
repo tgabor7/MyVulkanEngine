@@ -26,8 +26,6 @@ const bool enableValidationLayers = true;
 
 namespace myve
 {
-	class Device;
-	class Swapchain;
 	class Window {
 	public:
 		Window();
@@ -36,6 +34,9 @@ namespace myve
 		bool shouldClose();
 
 		VkInstance getInstance() const { return instance; }
+		VkSurfaceKHR getSurface() const { return surface; }
+		GLFWwindow* getWindow() { return window; }
+		void cleanUp();
 
 		~Window();
 	private:
@@ -43,9 +44,7 @@ namespace myve
 		void initVulkan();
 		void createInstance();
 		void setupDebugMessenger();
-		void createDevice();
 		void createSurface();
-		void createSwapchain();
 
 		VkResult CreateDebugUtilsMessengerEXT(VkInstance instance,
 			const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
@@ -63,8 +62,7 @@ namespace myve
 		GLFWwindow* window;
 		VkInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
-		std::unique_ptr<Device> device;
-		std::unique_ptr<Swapchain> swapchain;
+
 		VkSurfaceKHR surface;
 	};
 }

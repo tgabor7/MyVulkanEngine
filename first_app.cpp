@@ -1,25 +1,20 @@
 #include "first_app.hpp"
 
-#include "myve_window.hpp"
+#include "myve_renderer.hpp"
 #include <memory>
 
 namespace myve 
 {
 
-	std::unique_ptr<Window> window;
+	std::unique_ptr<Renderer> renderer;
 
 	void FirstApp::run()
 	{
-		window = std::make_unique<Window>();
+		renderer = std::make_unique<Renderer>();
 
-		while (!window->shouldClose()) {
+		renderer->draw();
 
-
-			window->pollEvents();
-		}
 	}
-
-
 	void FirstApp::initVulkan()
 	{
 
