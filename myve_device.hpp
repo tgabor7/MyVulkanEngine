@@ -26,6 +26,7 @@ namespace myve
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 		VkQueue getPresentQueue() const { return presentQueue; }
 		VkQueue getGraphicsQueue() const { return graphicsQueue; }
+		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 		void cleanUp();
 

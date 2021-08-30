@@ -2,14 +2,18 @@
 #include "myve_device.hpp"
 #include "myve_shader.hpp"
 #include "myve_swapchain.hpp"
+#include "myve_vbo.hpp"
 
 namespace myve
 {
 	class Pipeline {
 	public:
-		Pipeline(Device& device, Swapchain& swapchain);
+		Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO &vbo);
 		void drawFrame();
 		void cleanUp();
+		void recreateSwapChain();
+		bool framebufferResized = false;
+		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		~Pipeline();
 
 	private:
@@ -22,6 +26,7 @@ namespace myve
 		void createCommandPool();
 		void createCommandBuffers();
 		void createSyncObjects();
+		void cleanUpSwapchain();
 
 		Device& device;
 		Swapchain& swapchain;
@@ -41,6 +46,8 @@ namespace myve
 		std::vector<VkFramebuffer> swapChainFramebuffers;
 		std::vector<VkCommandBuffer> commandBuffers;
 
+		GLFWwindow* window;
+		VBO &vbo;
 		std::unique_ptr<Shader> shader;
 		size_t currentFrame = 0;
 	};

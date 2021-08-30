@@ -1,5 +1,6 @@
 #include "myve_shader.hpp"
 #include <fstream>
+#include "myve_vertex_data.hpp"
 
 namespace myve
 {
@@ -7,6 +8,9 @@ namespace myve
     {
         auto vertShaderCode = readFile(path + ".vert.spv");
         auto fragShaderCode = readFile(path + ".frag.spv");
+
+        auto bindingDescription = VertexData::getBindingDescription();
+        auto attributeDescriptions = VertexData::getAttributeDescriptions();
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -27,8 +31,11 @@ namespace myve
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexBindingDescriptionCount = 0;
-        vertexInputInfo.vertexAttributeDescriptionCount = 0;
+        vertexInputInfo.vertexBindingDescriptionCount = 1;
+        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+        vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+        vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

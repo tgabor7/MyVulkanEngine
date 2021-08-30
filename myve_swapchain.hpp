@@ -23,13 +23,15 @@ namespace myve
 		size_t getSwapChainImageCount() const { return swapChainImageViews.size(); }
 		VkSwapchainKHR getSwapchain() const { return swapChain; }
 
+		void createSwapchain();
+		void createImageViews();
+
+
 		static SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface);
 
 	private:
 		
-		void createSwapchain();
-		void createImageViews();
-
+		
 		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);

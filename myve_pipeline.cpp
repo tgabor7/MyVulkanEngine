@@ -6,7 +6,7 @@
 
 namespace myve
 {
-	Pipeline::Pipeline(Device& device, Swapchain &swapchain) : device { device }, swapchain{ swapchain }
+	Pipeline::Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO &vbo) : device{ device }, swapchain{ swapchain }, window{ window }, vbo{vbo}
 	{
 		createRenderPass();
 		createPipeline();
@@ -14,6 +14,53 @@ namespace myve
 		createCommandPool();
 		createCommandBuffers();
 		createSyncObjects();
+		glfwSetWindowUserPointer(window, this);
+
+	}
+	void Pipeline::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+		auto app = reinterpret_cast<Pipeline*>(glfwGetWindowUserPointer(window));
+		app->framebufferResized = true;
+	}
+	void Pipeline::cleanUpSwapchain()
+	{
+		for (size_t i = 0; i < swapChainFramebuffers.size(); i++) {
+			vkDestroyFramebuffer(device.getDevice(), swapChainFramebuffers[i], nullptr);
+		}
+
+		vkFreeCommandBuffers(device.getDevice(), commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+
+		vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
+		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
+		vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
+
+		for (size_t i = 0; i < swapchain.getSwapChainImageCount(); i++) {
+			vkDestroyImageView(device.getDevice(), swapchain.getSwapChainImageViews()[i], nullptr);
+		}
+
+		vkDestroySwapchainKHR(device.getDevice(), swapchain.getSwapchain(), nullptr);
+	}
+	void Pipeline::recreateSwapChain()
+	{
+		int width = 0, height = 0;
+		glfwGetFramebufferSize(window, &width, &height);
+		while (width == 0 || height == 0) {
+			glfwGetFramebufferSize(window, &width, &height);
+			glfwWaitEvents();
+		}
+
+		vkDeviceWaitIdle(device.getDevice());
+
+		cleanUpSwapchain();
+
+		swapchain.createSwapchain();
+		swapchain.createImageViews();
+		createRenderPass();
+		createPipeline();
+		createFramebuffers();
+		createCommandBuffers();
+
+		imagesInFlight.resize(swapchain.getSwapChainImageCount(), VK_NULL_HANDLE);
+
 	}
 	void Pipeline::createSyncObjects()
 	{
@@ -46,7 +93,15 @@ namespace myve
 		vkWaitForFences(device.getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 		uint32_t imageIndex;
-		vkAcquireNextImageKHR(device.getDevice(), swapchain.getSwapchain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+		VkResult result = vkAcquireNextImageKHR(device.getDevice(), swapchain.getSwapchain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
+			recreateSwapChain();
+			return;
+		}
+		else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+			throw std::runtime_error("failed to acquire swap chain image!");
+		}
 
 		if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
 			vkWaitForFences(device.getDevice(), 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
@@ -87,7 +142,15 @@ namespace myve
 
 		presentInfo.pImageIndices = &imageIndex;
 
-		vkQueuePresentKHR(device.getPresentQueue(), &presentInfo);
+		result = vkQueuePresentKHR(device.getPresentQueue(), &presentInfo);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
+			framebufferResized = false;
+			recreateSwapChain();
+		}
+		else if (result != VK_SUCCESS) {
+			throw std::runtime_error("failed to present swap chain image!");
+		}
 
 		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 	}
@@ -196,6 +259,8 @@ namespace myve
 
 			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
+			vbo.bind(commandBuffers[i]);
+
 			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
@@ -232,6 +297,7 @@ namespace myve
 			vkDestroySemaphore(device.getDevice(), imageAvailableSemaphores[i], nullptr);
 			vkDestroyFence(device.getDevice(), inFlightFences[i], nullptr);
 		}
+
 
 		vkDestroyCommandPool(device.getDevice(), commandPool, nullptr);
 		for (auto framebuffer : swapChainFramebuffers) {

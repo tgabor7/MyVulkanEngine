@@ -6,7 +6,7 @@
 //std
 #include <stdexcept>
 #include <iostream>
-
+#include "myve_pipeline.hpp"
 
 namespace myve {
 	Window::Window()
@@ -23,16 +23,16 @@ namespace myve {
 	{
 		glfwPollEvents();
 	}
-
 	void Window::initWindow()
 	{
 		glfwInit();
 
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		window = glfwCreateWindow(WIDTH, HEIGHT, "My Vulkan Engine!", nullptr, nullptr);
+		glfwSetFramebufferSizeCallback(window, Pipeline::framebufferResizeCallback);
 	}
+	
 	bool Window::checkValidationLayerSupport()
 	{
 		uint32_t layerCount;

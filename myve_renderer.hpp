@@ -4,6 +4,7 @@
 #include "myve_pipeline.hpp"
 #include "myve_swapchain.hpp"
 #include "myve_shader.hpp"
+#include "myve_vbo.hpp"
 
 namespace myve
 {
@@ -23,5 +24,6 @@ namespace myve
 		std::unique_ptr<Window> window;
 		std::unique_ptr<Swapchain> swapchain;
 		std::unique_ptr<Pipeline> pipeline;
+		std::unique_ptr<VBO> vbo;
 	};
 }

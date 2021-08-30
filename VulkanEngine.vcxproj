@@ -152,6 +152,7 @@
     <ClCompile Include="myve_renderer.cpp" />
     <ClCompile Include="myve_shader.cpp" />
     <ClCompile Include="myve_swapchain.cpp" />
+    <ClCompile Include="myve_vbo.cpp" />
     <ClCompile Include="myve_window.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -161,6 +162,8 @@
     <ClInclude Include="myve_renderer.hpp" />
     <ClInclude Include="myve_shader.hpp" />
     <ClInclude Include="myve_swapchain.hpp" />
+    <ClInclude Include="myve_vbo.hpp" />
+    <ClInclude Include="myve_vertex_data.hpp" />
     <ClInclude Include="myve_window.hpp" />
     <ClInclude Include="myve_device.hpp" />
   </ItemGroup>
