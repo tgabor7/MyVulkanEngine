@@ -23,7 +23,6 @@ namespace myve
 		void createPipeline();
 		void createRenderPass();
 		void createFramebuffers();
-		void createCommandPool();
 		void createCommandBuffers();
 		void createSyncObjects();
 		void cleanUpSwapchain();

@@ -11,7 +11,12 @@ namespace myve
 		createRenderPass();
 		createPipeline();
 		createFramebuffers();
-		createCommandPool();
+		
+		device.createCommandPool();
+		
+		vbo.createVertexBuffer();
+		vbo.createIndexBuffer();
+
 		createCommandBuffers();
 		createSyncObjects();
 		glfwSetWindowUserPointer(window, this);
@@ -27,7 +32,7 @@ namespace myve
 			vkDestroyFramebuffer(device.getDevice(), swapChainFramebuffers[i], nullptr);
 		}
 
-		vkFreeCommandBuffers(device.getDevice(), commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+		vkFreeCommandBuffers(device.getDevice(), device.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
 		vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
@@ -186,18 +191,6 @@ namespace myve
 			throw std::runtime_error("failed to create render pass!");
 		}
 	}
-	void Pipeline::createCommandPool()
-	{
-		QueueFamilyIndices queueFamilyIndices = device.findQueueFamilies(device.getPhysicalDevice());
-
-		VkCommandPoolCreateInfo poolInfo{};
-		poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
-
-		if (vkCreateCommandPool(device.getDevice(), &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create command pool!");
-		}
-	}
 
 	void Pipeline::createFramebuffers()
 	{
@@ -228,7 +221,7 @@ namespace myve
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.commandPool = commandPool;
+		allocInfo.commandPool = device.getCommandPool();
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = (uint32_t)commandBuffers.size();
 
@@ -261,7 +254,8 @@ namespace myve
 
 			vbo.bind(commandBuffers[i]);
 
-			vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			//vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			vkCmdDrawIndexed(commandBuffers[i], vbo.getIndexCount(), 1, 0, 0, 0);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 

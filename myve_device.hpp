@@ -27,7 +27,10 @@ namespace myve
 		VkQueue getPresentQueue() const { return presentQueue; }
 		VkQueue getGraphicsQueue() const { return graphicsQueue; }
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-
+		VkCommandPool getCommandPool() const { return commandPool; }
+		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+		void createCommandPool();
+		void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 		void cleanUp();
 
 		~Device();
@@ -48,5 +51,6 @@ namespace myve
 		VkSurfaceKHR surface;
 		VkDevice device;
 		VkQueue graphicsQueue;
+		VkCommandPool commandPool;
 	};
 }
