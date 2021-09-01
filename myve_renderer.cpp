@@ -16,8 +16,11 @@ namespace myve
 		window = std::make_unique<Window>();
 		device = std::make_unique<Device>(window->getInstance(), window->getSurface());
 		swapchain = std::make_unique<Swapchain>(*device, window->getWindow());
+		
 		vbo = std::make_unique<VBO>(*device, vertices, indices);
-		pipeline = std::make_unique<Pipeline>(*device, *swapchain, window->getWindow(), *vbo);
+		ubo = std::make_unique<UBO>(*device, *swapchain);
+
+		pipeline = std::make_unique<Pipeline>(*device, *swapchain, window->getWindow(), *vbo, *ubo);
 	}
 	Renderer::Renderer()
 	{

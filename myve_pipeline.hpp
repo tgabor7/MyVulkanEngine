@@ -3,12 +3,13 @@
 #include "myve_shader.hpp"
 #include "myve_swapchain.hpp"
 #include "myve_vbo.hpp"
+#include "myve_ubo.hpp"
 
 namespace myve
 {
 	class Pipeline {
 	public:
-		Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO &vbo);
+		Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO &vbo, UBO &ubo);
 		void drawFrame();
 		void cleanUp();
 		void recreateSwapChain();
@@ -47,6 +48,7 @@ namespace myve
 
 		GLFWwindow* window;
 		VBO &vbo;
+		UBO& ubo;
 		std::unique_ptr<Shader> shader;
 		size_t currentFrame = 0;
 	};

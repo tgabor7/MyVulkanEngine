@@ -4,7 +4,7 @@
 
 namespace myve
 {
-    Shader::Shader(Device &device,Swapchain &swapchain, const std::string& path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline) : device{ device }, swapchain{swapchain}
+    Shader::Shader(Device &device,Swapchain &swapchain, const std::string& path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline, UBO* ubo) : device{ device }, swapchain{swapchain}
     {
         auto vertShaderCode = readFile(path + ".vert.spv");
         auto fragShaderCode = readFile(path + ".frag.spv");
@@ -67,9 +67,9 @@ namespace myve
         rasterizer.rasterizerDiscardEnable = VK_FALSE;
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         rasterizer.lineWidth = 1.0f;
-        rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
+        rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
         VkPipelineMultisampleStateCreateInfo multisampling{};
         multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -93,7 +93,8 @@ namespace myve
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;
+        pipelineLayoutInfo.setLayoutCount = 1;
+        pipelineLayoutInfo.pSetLayouts = &ubo->getSetLayout();
         pipelineLayoutInfo.pushConstantRangeCount = 0;
 
         if (vkCreatePipelineLayout(device.getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {

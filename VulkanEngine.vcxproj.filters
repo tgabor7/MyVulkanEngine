@@ -45,6 +45,9 @@
     <ClCompile Include="myve_vbo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="myve_ubo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.hpp">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="myve_vertex_data.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="myve_ubo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,9 +6,10 @@
 
 namespace myve
 {
-	Pipeline::Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO &vbo) : device{ device }, swapchain{ swapchain }, window{ window }, vbo{vbo}
+	Pipeline::Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window, VBO& vbo, UBO& ubo) : device{ device }, swapchain{ swapchain }, window{ window }, vbo{ vbo }, ubo{ubo}
 	{
 		createRenderPass();
+		ubo.createDescriptorSetLayout();
 		createPipeline();
 		createFramebuffers();
 		
@@ -16,6 +17,10 @@ namespace myve
 		
 		vbo.createVertexBuffer();
 		vbo.createIndexBuffer();
+
+		ubo.createUniformBuffers();
+		ubo.createDescriptorPool();
+		ubo.createDescriptorSets();
 
 		createCommandBuffers();
 		createSyncObjects();
@@ -62,6 +67,10 @@ namespace myve
 		createRenderPass();
 		createPipeline();
 		createFramebuffers();
+		ubo.createUniformBuffers();
+		ubo.createDescriptorPool();
+		ubo.createDescriptorSets();
+
 		createCommandBuffers();
 
 		imagesInFlight.resize(swapchain.getSwapChainImageCount(), VK_NULL_HANDLE);
@@ -112,6 +121,8 @@ namespace myve
 			vkWaitForFences(device.getDevice(), 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
 		}
 		imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+		ubo.update(imageIndex, swapchain.getExtent());
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -254,6 +265,8 @@ namespace myve
 
 			vbo.bind(commandBuffers[i]);
 
+			ubo.bind(commandBuffers[i], pipelineLayout, i);
+
 			//vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
 			vkCmdDrawIndexed(commandBuffers[i], vbo.getIndexCount(), 1, 0, 0, 0);
 
@@ -269,16 +282,14 @@ namespace myve
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = 0; // Optional
-		pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
-		pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
-		pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+		pipelineLayoutInfo.setLayoutCount = 1; // Optional
+		pipelineLayoutInfo.pSetLayouts = &ubo.getSetLayout(); // Optional
 
 		if (vkCreatePipelineLayout(device.getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
 
-		shader = std::make_unique<Shader>(device, swapchain, "shaders/simple_shader", pipelineLayout, &renderPass, &graphicsPipeline);
+		shader = std::make_unique<Shader>(device, swapchain, "shaders/simple_shader", pipelineLayout, &renderPass, &graphicsPipeline, &ubo);
 
 	}
 	void Pipeline::cleanUp()

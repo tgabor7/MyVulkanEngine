@@ -1,6 +1,7 @@
 #pragma once
 #include "myve_device.hpp"
 #include "myve_swapchain.hpp"
+#include "myve_ubo.hpp"
 
 //std
 #include <string>
@@ -19,7 +20,7 @@ namespace myve
 
 	class Shader {
 	public:
-		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline);
+		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline, UBO *ubo);
 		ShaderInfo getShaderInfo() { return shaderInfo; }
 		~Shader();
 	private:
