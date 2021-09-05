@@ -48,6 +48,9 @@
     <ClCompile Include="myve_ubo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="myve_texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.hpp">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="myve_ubo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="myve_texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include "myve_shader.hpp"
 #include "myve_vbo.hpp"
 #include "myve_ubo.hpp"
+#include "myve_texture.hpp"
 
 namespace myve
 {
@@ -27,5 +28,6 @@ namespace myve
 		std::unique_ptr<Pipeline> pipeline;
 		std::unique_ptr<VBO> vbo;
 		std::unique_ptr<UBO> ubo;
+		std::unique_ptr<Texture> texture;
 	};
 }

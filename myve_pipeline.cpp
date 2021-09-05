@@ -14,7 +14,9 @@ namespace myve
 		createFramebuffers();
 		
 		device.createCommandPool();
-		
+		ubo.texture.createTextureImage();
+		ubo.texture.createTextureImageView();
+		ubo.texture.createTextureSampler();
 		vbo.createVertexBuffer();
 		vbo.createIndexBuffer();
 
@@ -255,7 +257,7 @@ namespace myve
 			renderPassInfo.renderArea.offset = { 0, 0 };
 			renderPassInfo.renderArea.extent = swapchain.getExtent();
 
-			VkClearValue clearColor = { {{0.0f, 0.0f, 0.0f, 1.0f}} };
+			VkClearValue clearColor = { {{0.01f, 0.01f, 0.01f, 1.0f}} };
 			renderPassInfo.clearValueCount = 1;
 			renderPassInfo.pClearValues = &clearColor;
 
