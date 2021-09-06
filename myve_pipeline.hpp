@@ -27,7 +27,9 @@ namespace myve
 		void createCommandBuffers();
 		void createSyncObjects();
 		void cleanUpSwapchain();
-
+		void createDepthResources();
+		VkFormat findDepthFormat();
+		VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 		Device& device;
 		Swapchain& swapchain;
 		VkCommandPool commandPool;
@@ -39,6 +41,10 @@ namespace myve
 		std::vector<VkFence> imagesInFlight;
 		VkSemaphore imageAvailableSemaphore;
 		VkSemaphore renderFinishedSemaphore;
+
+		VkImage depthImage;
+		VkDeviceMemory depthImageMemory;
+		VkImageView depthImageView;
 
 		std::vector<VkSemaphore> imageAvailableSemaphores;
 		std::vector<VkSemaphore> renderFinishedSemaphores;

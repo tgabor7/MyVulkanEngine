@@ -16,12 +16,13 @@ namespace myve
 		void createTextureImage();
 		void createTextureImageView();
 		void createTextureSampler();
+		
+		static void createImage(Device &device, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+		static VkImageView createImageView(Device &device, VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 
 		~Texture();
 	private:
 		
-		VkImageView createImageView(VkImage image, VkFormat format);
-		void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 
 		Device& device;
 
