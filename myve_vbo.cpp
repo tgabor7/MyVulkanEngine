@@ -16,7 +16,7 @@ namespace myve
     {
 
     }
-    VBO::VBO(Device& device, const std::vector<VertexData>& data, const std::vector<uint16_t>& indices) : device{ device }, vertices{ data }, indices{indices}
+    VBO::VBO(Device& device, const std::vector<VertexData>& data, const std::vector<uint32_t>& indices) : device{ device }, vertices{ data }, indices{indices}
     {
         //createVertexBuffer();
     }
@@ -46,7 +46,7 @@ namespace myve
         VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 
-        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
     }
 	void VBO::createVertexBuffer()
 	{

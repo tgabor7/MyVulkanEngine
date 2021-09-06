@@ -7,7 +7,7 @@ namespace myve
 	class VBO
 	{
 	public:
-		VBO(Device &device,const std::vector<VertexData> &data, const std::vector<uint16_t> &indices);
+		VBO(Device &device,const std::vector<VertexData> &data, const std::vector<uint32_t> &indices);
 		void cleanUp();
 		void bind(VkCommandBuffer commandBuffer);
 		void createVertexBuffer();
@@ -22,6 +22,6 @@ namespace myve
 
 		VkBuffer indexBuffer;
 		VkDeviceMemory indexBufferMemory;
-		std::vector<uint16_t> indices;
+		std::vector<uint32_t> indices;
 	};
 }
