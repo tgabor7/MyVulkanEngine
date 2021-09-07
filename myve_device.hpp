@@ -28,6 +28,7 @@ namespace myve
 		VkQueue getGraphicsQueue() const { return graphicsQueue; }
 		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 		VkCommandPool getCommandPool() const { return commandPool; }
+		VkSampleCountFlagBits getMSAASamples() const { return msaaSamples; }
 		void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		void createCommandPool();
 		void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
@@ -45,9 +46,9 @@ namespace myve
 
 		bool isDeviceSuitable(VkPhysicalDevice device);
 		bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+		VkSampleCountFlagBits getMaxUsableSampleCount();
 		
-		
-
+		VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 		VkQueue presentQueue;
 		VkPhysicalDevice physicalDevice;
 		VkInstance instance;
