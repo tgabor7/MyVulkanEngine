@@ -7,8 +7,7 @@
 #include <vector>
 #include <memory>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -37,6 +36,9 @@ namespace myve
 		VkSurfaceKHR getSurface() const { return surface; }
 		GLFWwindow* getWindow() { return window; }
 		void cleanUp();
+
+		static uint32_t WIDTH;
+		static uint32_t HEIGHT;
 
 		~Window();
 	private:

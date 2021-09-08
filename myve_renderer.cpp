@@ -2,6 +2,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 #include <unordered_map>
+#include "input_handler.hpp"
 
 namespace myve
 {
@@ -55,6 +56,7 @@ namespace myve
 		swapchain = std::make_unique<Swapchain>(*device, window->getWindow());
 		texture = std::make_unique<Texture>(*device);
 
+		InputHandler::init(window->getWindow());
 
 		vbo = std::make_unique<VBO>(*device, vertices, indices);
 		ubo = std::make_unique<UBO>(*device, *swapchain, *texture);

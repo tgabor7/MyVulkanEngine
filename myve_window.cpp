@@ -9,6 +9,10 @@
 #include "myve_pipeline.hpp"
 
 namespace myve {
+
+	uint32_t Window::WIDTH = 800;
+	uint32_t Window::HEIGHT = 600;
+
 	Window::Window()
 	{
 		initWindow();
@@ -30,6 +34,9 @@ namespace myve {
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		window = glfwCreateWindow(WIDTH, HEIGHT, "My Vulkan Engine!", nullptr, nullptr);
+
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 		glfwSetFramebufferSizeCallback(window, Pipeline::framebufferResizeCallback);
 	}
 	

@@ -3,6 +3,7 @@
 //std
 
 #include <stdexcept>
+#include <iostream>
 
 namespace myve
 {
@@ -58,6 +59,8 @@ namespace myve
 	{
 		int width = 0, height = 0;
 		glfwGetFramebufferSize(window, &width, &height);
+		Window::WIDTH = width;
+		Window::HEIGHT = height;
 		while (width == 0 || height == 0) {
 			glfwGetFramebufferSize(window, &width, &height);
 			glfwWaitEvents();
@@ -176,6 +179,17 @@ namespace myve
 		}
 
 		currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - old_time).count();
+		fps++;
+		
+		if (time > 1.0) {
+			printf("\rFrame time: %f, %i FPS", time / fps, fps);
+			fps = 0;
+			old_time = std::chrono::high_resolution_clock::now();
+		}
 	}
 	void Pipeline::createRenderPass()
 	{
@@ -279,6 +293,7 @@ namespace myve
 	void Pipeline::createCommandBuffers()
 	{
 		commandBuffers.resize(swapChainFramebuffers.size());
+		
 
 		VkCommandBufferAllocateInfo allocInfo{};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -290,7 +305,7 @@ namespace myve
 			throw std::runtime_error("failed to allocate command buffers!");
 		}
 
-		for (size_t i = 0; i < commandBuffers.size(); i++) {
+		for (uint32_t i = 0; i < commandBuffers.size(); i++) {
 			VkCommandBufferBeginInfo beginInfo{};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -306,7 +321,7 @@ namespace myve
 			renderPassInfo.renderArea.extent = swapchain.getExtent();
 
 			std::array<VkClearValue, 2> clearValues{};
-			clearValues[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
+			clearValues[0].color = { {0.01f, 0.0f, 0.01f, 1.0f} };
 			clearValues[1].depthStencil = { 1.0f, 0 };
 
 			renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
@@ -321,7 +336,7 @@ namespace myve
 			ubo.bind(commandBuffers[i], pipelineLayout, i);
 
 			//vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-			vkCmdDrawIndexed(commandBuffers[i], vbo.getIndexCount(), 1, 0, 0, 0);
+			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(vbo.getIndexCount()), 1, 0, 0, 0);
 
 			vkCmdEndRenderPass(commandBuffers[i]);
 

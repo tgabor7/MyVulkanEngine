@@ -4,6 +4,7 @@
 #include "myve_swapchain.hpp"
 #include "myve_vbo.hpp"
 #include "myve_ubo.hpp"
+#include <chrono>
 
 namespace myve
 {
@@ -20,6 +21,9 @@ namespace myve
 	private:
 
 		const int MAX_FRAMES_IN_FLIGHT = 2;
+
+		std::chrono::steady_clock::time_point old_time = std::chrono::high_resolution_clock::now();
+		uint32_t fps = 0;
 
 		void createPipeline();
 		void createRenderPass();

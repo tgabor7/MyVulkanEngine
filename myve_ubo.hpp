@@ -3,6 +3,7 @@
 #include "myve_swapchain.hpp"
 #include <glm/mat4x4.hpp>
 #include "myve_texture.hpp"
+#include "myve_camera.hpp"
 
 namespace myve
 {
@@ -28,6 +29,8 @@ namespace myve
 
 		~UBO();
 	private:
+		Camera c{};
+
 		Device& device;
 		Swapchain& swapchain;
 		std::vector<VkBuffer> uniformBuffers;
