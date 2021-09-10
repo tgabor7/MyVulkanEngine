@@ -66,28 +66,19 @@ namespace myve
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
-    void UBO::update(uint32_t currentImage, VkExtent2D swapChainExtent)
+    void UBO::update(uint32_t currentImage, VkExtent2D swapChainExtent, glm::mat4 model)
     {
-
-
         static auto startTime = std::chrono::high_resolution_clock::now();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         UniformBufferObject ubo{};
-        //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         
-        ubo.model = glm::mat4{ 1.f };
-
-        //ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = model;
         
         ubo.view = c.getViewMatrix();
         
-        //ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
-        
-        //ubo.proj[1][1] *= -1;
-
         ubo.proj = c.getProjectionMatrix(1.0f, 0.01f, 10.0f);
 
         if (InputHandler::isKeyDown(GLFW_KEY_A)) {
@@ -103,10 +94,17 @@ namespace myve
         if (InputHandler::isKeyDown(GLFW_KEY_W)) {
             c.translate({ cos(c.yaw) * cos(c.pitch)*.1f, sin(c.yaw) * cos(c.pitch)*.1f, 0.f });
         }
+        if (InputHandler::isKeyDown(GLFW_KEY_E)) {
+            c.translate({ 0.f,0.f, .1f });
+        }
+        if (InputHandler::isKeyDown(GLFW_KEY_Q)) {
+            c.translate({ 0.f,0.f, -.1f });
+
+        }
         Mouse m = InputHandler::getMouseD();
 
-        c.moveYaw(-m.x * 0.01f);
-        c.movePitch(m.y * 0.01f);
+        /*c.moveYaw(-m.x * 0.01f);
+        c.movePitch(m.y * 0.01f);*/
 
         void* data;
         vkMapMemory(device.getDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);

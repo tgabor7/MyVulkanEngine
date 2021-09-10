@@ -1,67 +1,44 @@
 #include "myve_renderer.hpp"
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
 #include <unordered_map>
 #include "input_handler.hpp"
+#include "myve_resource_loader.hpp"
 
 namespace myve
 {
 	
-	void Renderer::loadModel()
-	{
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-		std::string warn, err;
-
-		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, "models/viking_room.obj")) {
-			throw std::runtime_error(warn + err);
-		}
-
-		std::unordered_map<VertexData, uint32_t> uniqueVertices{};
-
-		for (const auto& shape : shapes) {
-			for (const auto& index : shape.mesh.indices) {
-				VertexData vertex{};
-
-				vertex.pos = {
-					attrib.vertices[3 * index.vertex_index + 0],
-					attrib.vertices[3 * index.vertex_index + 1],
-					attrib.vertices[3 * index.vertex_index + 2]
-				};
-
-				vertex.texCoord = {
-					attrib.texcoords[2 * index.texcoord_index + 0],
-					1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-				};
-
-				vertex.color = { 1.0f, 1.0f, 1.0f };
-
-				if (uniqueVertices.count(vertex) == 0) {
-					uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-					vertices.push_back(vertex);
-				}
-
-				indices.push_back(uniqueVertices[vertex]);
-			}
-		}
-
-	}
 	void Renderer::init()
 	{
-		loadModel();
 
-		window = std::make_unique<Window>();
-		device = std::make_unique<Device>(window->getInstance(), window->getSurface());
-		swapchain = std::make_unique<Swapchain>(*device, window->getWindow());
-		texture = std::make_unique<Texture>(*device);
+		ModelData data = ResourceLoader::loadOBJ("models/bunny.obj");
 
-		InputHandler::init(window->getWindow());
+		
 
-		vbo = std::make_unique<VBO>(*device, vertices, indices);
-		ubo = std::make_unique<UBO>(*device, *swapchain, *texture);
+		//texture = std::make_unique<Texture>(device, "textures/bunny-atlas.jpg");
 
-		pipeline = std::make_unique<Pipeline>(*device, *swapchain, window->getWindow(), *vbo, *ubo);
+		InputHandler::init(window.getWindow());
+
+
+		/*vbo = std::make_unique<VBO>(device, data.vertices, data.indices);
+		ubo = std::make_unique<UBO>(device, swapchain, *texture);*/
+
+		GameObject room{ device, swapchain, ResourceLoader::loadOBJ("models/viking_room.obj"), new Texture(device, "textures/viking_room.png")};
+
+		pipeline = new Pipeline(device, swapchain, window.getWindow());
+		
+		for (int i = -2; i < 2; ++i) {
+			for (int j = -2; j < 2; ++j) {
+				GameObject bunny{ device, swapchain ,ResourceLoader::loadOBJ("models/viking_room.obj"), new Texture(device, "textures/viking_room.png") };
+				bunny.transformation.position.z = i * 1;
+				bunny.transformation.position.x = j * 1;
+
+				pipeline->addGameObject(bunny);
+			}
+		}
+		
+
+		pipeline->addGameObject(room);
+
+		pipeline->init();
 	}
 	Renderer::Renderer()
 	{
@@ -73,17 +50,20 @@ namespace myve
 	}
 	void Renderer::draw()
 	{
-		while (!window->shouldClose()) {
-			window->pollEvents();
+		while (!window.shouldClose()) {
+			window.pollEvents();
 			pipeline->drawFrame();
 		}
+		cleanUp();
 	}
 	void Renderer::cleanUp()
 	{
 		pipeline->cleanUp();
-		vbo->cleanUp();
-		swapchain->cleanUp();
-		device->cleanUp();
-		window->cleanUp();
+		//vbo->cleanUp();
+		swapchain.cleanUp();
+		device.cleanUp();
+		window.cleanUp();
+
+		delete pipeline;
 	}
 }

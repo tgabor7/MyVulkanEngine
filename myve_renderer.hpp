@@ -22,15 +22,16 @@ namespace myve
 		void draw();
 
 	private:
-		void loadModel();
 
 		std::vector<VertexData> vertices;
 		std::vector<uint32_t> indices;
+		
+		Window window{};
 
-		std::unique_ptr<Device> device;
-		std::unique_ptr<Window> window;
-		std::unique_ptr<Swapchain> swapchain;
-		std::unique_ptr<Pipeline> pipeline;
+		Device device{ window};
+		Swapchain swapchain{ device, window};
+
+		Pipeline *pipeline;
 		std::unique_ptr<VBO> vbo;
 		std::unique_ptr<UBO> ubo;
 		std::unique_ptr<Texture> texture;

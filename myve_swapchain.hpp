@@ -12,7 +12,7 @@ namespace myve
 	class Swapchain {
 
 	public:
-		Swapchain(Device& device, GLFWwindow* window);
+		Swapchain(Device& device, Window &window);
 		~Swapchain();
 
 		void cleanUp();

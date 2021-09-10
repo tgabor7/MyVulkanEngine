@@ -1,14 +1,14 @@
 #pragma once
 #include "myve_device.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-
+#include <string>
 
 namespace myve
 {
 	class Texture
 	{
 	public:
-		Texture(Device &device);
+		Texture(Device &device, const std::string &path);
 		void cleanUp();
 		VkImageView getImageView() const { return textureImageView; }
 		VkSampler getSampler() const { return textureSampler; }
@@ -23,6 +23,8 @@ namespace myve
 	private:
 		void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 
+
+		std::string path;
 
 		Device& device;
 		VkBuffer stagingBuffer;

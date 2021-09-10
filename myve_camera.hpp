@@ -21,8 +21,8 @@ namespace myve
 
 		~Camera();
 	private:
-		glm::vec3 position{0.f,3.f,1.f};
-		glm::vec3 direction{.5f,-0.5f,0};
+		glm::vec3 position{0.f,5.f,0.f};
+		glm::vec3 direction{0.f,-1.f,0};
 		glm::vec3 up{ 0,0,1.f };
 	};
 }

@@ -18,10 +18,10 @@ namespace myve
 	class Device {
 	public:
 
-		Device(VkInstance instance, VkSurfaceKHR surface);
+		Device(Window &window);
 
 		VkDevice getDevice() const { return device; }
-		VkSurfaceKHR getSurface() const { return surface; }
+		VkSurfaceKHR getSurface() const { return window.getSurface(); }
 		VkPhysicalDevice getPhysicalDevice() const { return physicalDevice; }
 		QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 		VkQueue getPresentQueue() const { return presentQueue; }
@@ -51,10 +51,9 @@ namespace myve
 		VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 		VkQueue presentQueue;
 		VkPhysicalDevice physicalDevice;
-		VkInstance instance;
-		VkSurfaceKHR surface;
 		VkDevice device;
 		VkQueue graphicsQueue;
 		VkCommandPool commandPool;
+		Window& window;
 	};
 }

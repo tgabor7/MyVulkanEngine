@@ -20,7 +20,7 @@ namespace myve
 
 	class Shader {
 	public:
-		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline, UBO *ubo);
+		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline);
 		ShaderInfo getShaderInfo() { return shaderInfo; }
 		~Shader();
 	private:

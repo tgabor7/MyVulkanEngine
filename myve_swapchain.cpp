@@ -4,7 +4,7 @@
 
 namespace myve 
 {
-	Swapchain::Swapchain(Device& device, GLFWwindow* window) : device{ device }, window{window}
+	Swapchain::Swapchain(Device& device, Window &window) : device{ device }, window{window.getWindow()}
 	{
 		createSwapchain();
 		createImageViews();

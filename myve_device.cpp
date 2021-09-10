@@ -6,7 +6,7 @@
 
 namespace myve
 {
-    Device::Device(VkInstance instance, VkSurfaceKHR surface) : instance{ instance }, surface{surface}
+    Device::Device(Window& window) : window{window}
     {
         pickPhysicalDevice();
         createLogicalDevice();
@@ -292,7 +292,7 @@ namespace myve
 
         bool swapChainAdequate = false;
         if (extensionsSupported) {
-            SwapChainSupportDetails swapChainSupport = Swapchain::querySwapChainSupport(device, surface);
+            SwapChainSupportDetails swapChainSupport = Swapchain::querySwapChainSupport(device, window.getSurface());
             swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
         }
 
@@ -318,7 +318,7 @@ namespace myve
             }
 
             VkBool32 presentSupport = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, window.getSurface(), &presentSupport);
 
             if (presentSupport) {
                 indices.presentFamily = i;
@@ -336,14 +336,14 @@ namespace myve
 	void Device::pickPhysicalDevice()
 	{
         uint32_t deviceCount = 0;
-        vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(window.getInstance(), &deviceCount, nullptr);
 
         if (deviceCount == 0) {
             throw std::runtime_error("failed to find GPUs with Vulkan support!");
         }
 
         std::vector<VkPhysicalDevice> devices(deviceCount);
-        vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+        vkEnumeratePhysicalDevices(window.getInstance(), &deviceCount, devices.data());
 
         for (const auto& device : devices) {
             if (isDeviceSuitable(device)) {
