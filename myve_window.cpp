@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 #include "myve_pipeline.hpp"
+#include <cstring>
 
 namespace myve {
 
@@ -52,7 +53,7 @@ namespace myve {
 			bool layerFound = false;
 
 			for (const auto& layerProperties : availableLayers) {
-				if (strcmp(layerName, layerProperties.layerName) == 0) {
+				if (std::strcmp(layerName, layerProperties.layerName) == 0) {
 					layerFound = true;
 					break;
 				}

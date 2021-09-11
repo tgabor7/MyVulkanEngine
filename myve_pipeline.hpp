@@ -29,7 +29,7 @@ namespace myve
 
 		const int MAX_FRAMES_IN_FLIGHT = 2;
 
-		std::chrono::steady_clock::time_point old_time = std::chrono::high_resolution_clock::now();
+		std::chrono::time_point<std::chrono::high_resolution_clock> old_time;
 		uint32_t fps = 0;
 
 		void createPipeline();

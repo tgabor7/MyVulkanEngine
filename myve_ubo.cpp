@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <array>
 #include "input_handler.hpp"
+#include <cstring>
 
 namespace myve
 {
@@ -104,7 +105,7 @@ namespace myve
 
         void* data;
         vkMapMemory(device.getDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
-        memcpy(data, &ubo, sizeof(ubo));
+	std::memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device.getDevice(), uniformBuffersMemory[currentImage]);
 
         InputHandler::update();
