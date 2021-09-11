@@ -21,19 +21,17 @@ namespace myve
 
 		void draw();
 
+		void createGameObject();
+
+		void addGameObject(GameObject object);
+
 	private:
 
-		std::vector<VertexData> vertices;
-		std::vector<uint32_t> indices;
-		
 		Window window{};
 
 		Device device{ window};
 		Swapchain swapchain{ device, window};
 
 		Pipeline *pipeline;
-		std::unique_ptr<VBO> vbo;
-		std::unique_ptr<UBO> ubo;
-		std::unique_ptr<Texture> texture;
 	};
 }

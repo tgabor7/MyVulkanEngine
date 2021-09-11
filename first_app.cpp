@@ -1,31 +1,25 @@
 #include "first_app.hpp"
 
-#include "myve_renderer.hpp"
 #include <memory>
+#include "myve_scene.hpp"
+#include "input_handler.hpp"
 
 namespace myve 
 {
 
-	std::unique_ptr<Renderer> renderer;
-
-	void FirstApp::run()
+	FirstApp::FirstApp()
 	{
-		renderer = std::make_unique<Renderer>();
-
-		renderer->draw();
+	}
+	void FirstApp::update()
+	{
+        
+        Mouse m = InputHandler::getMouseD();
 
 	}
-	void FirstApp::initVulkan()
+	void FirstApp::loadResources()
 	{
-
+		createGameObject();
 	}
-	void FirstApp::mainLoop()
-	{
-
-	}
-	void FirstApp::cleanUp()
-	{
-
-	}
+	
 }
 

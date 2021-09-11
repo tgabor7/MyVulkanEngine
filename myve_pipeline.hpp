@@ -6,7 +6,6 @@
 #include "myve_ubo.hpp"
 #include <chrono>
 #include "myve_game_object.hpp"
-#include "myve_game_object.hpp"
 
 namespace myve
 {

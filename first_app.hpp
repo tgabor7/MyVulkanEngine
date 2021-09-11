@@ -1,13 +1,14 @@
 #pragma once
+#include "myve_scene.hpp"
 
 namespace myve {
 
-	class FirstApp {
+	class FirstApp : public Scene{
 	public:
-		void run();
+		FirstApp();
+		void update();
+		void loadResources();
+
 	private:
-		void initVulkan();
-		void mainLoop();
-		void cleanUp();
 	};
 }

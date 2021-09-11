@@ -154,6 +154,7 @@
     <ClCompile Include="myve_pipeline.cpp" />
     <ClCompile Include="myve_renderer.cpp" />
     <ClCompile Include="myve_resource_loader.cpp" />
+    <ClCompile Include="myve_scene.cpp" />
     <ClCompile Include="myve_shader.cpp" />
     <ClCompile Include="myve_swapchain.cpp" />
     <ClCompile Include="myve_texture.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="myve_camera.hpp" />
     <ClInclude Include="myve_pipeline.hpp" />
     <ClInclude Include="myve_renderer.hpp" />
+    <ClInclude Include="myve_scene.hpp" />
     <ClInclude Include="myve_shader.hpp" />
     <ClInclude Include="myve_swapchain.hpp" />
     <ClInclude Include="myve_texture.hpp" />

@@ -73,14 +73,6 @@ namespace myve
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        UniformBufferObject ubo{};
-        
-        ubo.model = model;
-        
-        ubo.view = c.getViewMatrix();
-        
-        ubo.proj = c.getProjectionMatrix(1.0f, 0.01f, 10.0f);
-
         if (InputHandler::isKeyDown(GLFW_KEY_A)) {
             c.translate({ -sin(c.yaw) * cos(c.pitch) * .1f,cos(c.yaw) * cos(c.pitch) * .1f, 0.f });
 
@@ -89,10 +81,10 @@ namespace myve
             c.translate({ sin(c.yaw) * cos(c.pitch) * .1f,-cos(c.yaw) * cos(c.pitch) * .1f, 0.f });
         }
         if (InputHandler::isKeyDown(GLFW_KEY_S)) {
-            c.translate({ -cos(c.yaw) * cos(c.pitch) * .1f, -sin(c.yaw) * cos(c.pitch)*.1f, 0.f });
+            c.translate({ -cos(c.yaw) * cos(c.pitch) * .1f, -sin(c.yaw) * cos(c.pitch) * .1f, 0.f });
         }
         if (InputHandler::isKeyDown(GLFW_KEY_W)) {
-            c.translate({ cos(c.yaw) * cos(c.pitch)*.1f, sin(c.yaw) * cos(c.pitch)*.1f, 0.f });
+            c.translate({ cos(c.yaw) * cos(c.pitch) * .1f, sin(c.yaw) * cos(c.pitch) * .1f, 0.f });
         }
         if (InputHandler::isKeyDown(GLFW_KEY_E)) {
             c.translate({ 0.f,0.f, .1f });
@@ -101,10 +93,14 @@ namespace myve
             c.translate({ 0.f,0.f, -.1f });
 
         }
-        Mouse m = InputHandler::getMouseD();
 
-        /*c.moveYaw(-m.x * 0.01f);
-        c.movePitch(m.y * 0.01f);*/
+        UniformBufferObject ubo{};
+        
+        ubo.model = model;
+        
+        ubo.view = c.getViewMatrix();
+        
+        ubo.proj = c.getProjectionMatrix(1.0f, 0.01f, 10.0f);
 
         void* data;
         vkMapMemory(device.getDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
