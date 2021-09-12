@@ -60,7 +60,6 @@ namespace myve
 
 		vkFreeCommandBuffers(device.getDevice(), device.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-		vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
 		vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
 
@@ -351,7 +350,7 @@ namespace myve
 
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
 
 			for (auto& gameObject : gameObjects)
 			{
@@ -426,7 +425,8 @@ namespace myve
 			throw std::runtime_error("failed to create pipeline layout!");
 		}
 
-		shader = std::make_unique<Shader>(device, swapchain, "shaders/simple_shader", pipelineLayout, &renderPass, &graphicsPipeline);
+		shader = std::make_unique<Shader>(device, swapchain, "shaders/simple_shader", pipelineLayout, renderPass);
+		//another_shader = std::make_unique<Shader>(device, swapchain, "shaders/another_shader", pipelineLayout, &renderPass, &graphicsPipeline);
 
 	}
 	void Pipeline::cleanUp()
@@ -454,7 +454,6 @@ namespace myve
 			vkDestroyFramebuffer(device.getDevice(), framebuffer, nullptr);
 		}
 
-		vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
 		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
 		vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
 	}

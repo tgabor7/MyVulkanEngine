@@ -48,7 +48,6 @@ namespace myve
 
 		VkRenderPass renderPass;
 		VkPipelineLayout pipelineLayout;
-		VkPipeline graphicsPipeline;
 		std::vector<VkFence> inFlightFences;
 		std::vector<VkFence> imagesInFlight;
 		VkSemaphore imageAvailableSemaphore;
@@ -70,6 +69,7 @@ namespace myve
 
 		GLFWwindow* window;
 		std::unique_ptr<Shader> shader;
+		std::unique_ptr<Shader> another_shader;
 		size_t currentFrame = 0;
 	};
 }

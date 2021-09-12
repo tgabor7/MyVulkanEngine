@@ -20,12 +20,15 @@ namespace myve
 
 	class Shader {
 	public:
-		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline);
+		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, const VkRenderPass &renderPass);
 		ShaderInfo getShaderInfo() { return shaderInfo; }
+		VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
 		~Shader();
 	private:
 		static std::vector<char> readFile(const std::string& filename);
 		VkShaderModule createShaderModule(const std::vector<char>& code);
+
+		VkPipeline graphicsPipeline;
 
 		Device& device;
 		Swapchain& swapchain;

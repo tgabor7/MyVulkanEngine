@@ -4,7 +4,7 @@
 
 namespace myve
 {
-    Shader::Shader(Device &device,Swapchain &swapchain, const std::string& path, VkPipelineLayout pipelineLayout, VkRenderPass *renderPass, VkPipeline* graphicsPipeline) : device{ device }, swapchain{swapchain}
+    Shader::Shader(Device &device,Swapchain &swapchain, const std::string& path, VkPipelineLayout pipelineLayout, const VkRenderPass &renderPass) : device{ device }, swapchain{swapchain}
     {
         auto vertShaderCode = readFile(path + ".vert.spv");
         auto fragShaderCode = readFile(path + ".frag.spv");
@@ -122,11 +122,11 @@ namespace myve
         pipelineInfo.pDepthStencilState = &depthStencil;
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.layout = pipelineLayout;
-        pipelineInfo.renderPass = *renderPass;
+        pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        if (vkCreateGraphicsPipelines(device.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, graphicsPipeline) != VK_SUCCESS) {
+        if (vkCreateGraphicsPipelines(device.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 
@@ -150,6 +150,7 @@ namespace myve
     }
     Shader::~Shader()
     {
+        vkDestroyPipeline(device.getDevice(), graphicsPipeline, nullptr);
     }
 	std::vector<char> Shader::readFile(const std::string& filename)
 	{
