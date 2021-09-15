@@ -15,7 +15,6 @@ namespace myve
 	}
 	void Renderer::addGameObject(GameObject object)
 	{
-		pipeline->addGameObject(object);
 	}
 	void Renderer::createGameObject()
 	{

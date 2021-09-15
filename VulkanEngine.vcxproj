@@ -151,11 +151,14 @@
     <ClCompile Include="myve_camera.cpp" />
     <ClCompile Include="myve_device.cpp" />
     <ClCompile Include="myve_game_object.cpp" />
+    <ClCompile Include="myve_mesh_renderer.cpp" />
+    <ClCompile Include="myve_model.cpp" />
     <ClCompile Include="myve_pipeline.cpp" />
     <ClCompile Include="myve_renderer.cpp" />
     <ClCompile Include="myve_resource_loader.cpp" />
     <ClCompile Include="myve_scene.cpp" />
     <ClCompile Include="myve_shader.cpp" />
+    <ClCompile Include="myve_simple_renderer.cpp" />
     <ClCompile Include="myve_swapchain.cpp" />
     <ClCompile Include="myve_texture.cpp" />
     <ClCompile Include="myve_ubo.cpp" />
@@ -165,6 +168,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.hpp" />
+    <ClInclude Include="myve_mesh_renderer.hpp" />
+    <ClInclude Include="myve_model.hpp" />
     <ClInclude Include="myve_resource_loader.hpp" />
     <ClInclude Include="myve_game_object.hpp" />
     <ClInclude Include="input_handler.hpp" />
@@ -173,6 +178,8 @@
     <ClInclude Include="myve_renderer.hpp" />
     <ClInclude Include="myve_scene.hpp" />
     <ClInclude Include="myve_shader.hpp" />
+    <ClInclude Include="myve_simple_renderer.hpp" />
+    <ClInclude Include="myve_sprite_rednerer.hpp" />
     <ClInclude Include="myve_swapchain.hpp" />
     <ClInclude Include="myve_texture.hpp" />
     <ClInclude Include="myve_ubo.hpp" />

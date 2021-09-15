@@ -8,6 +8,10 @@
 
 namespace myve
 {
+	struct PushConstantData {
+		glm::mat4 model;
+		glm::mat4 render_matrix;
+	};
 	struct ShaderInfo {
 		std::vector<VkPipelineShaderStageCreateInfo> pStages;
 		VkPipelineVertexInputStateCreateInfo* inputInfo;
@@ -20,15 +24,18 @@ namespace myve
 
 	class Shader {
 	public:
-		Shader(Device &device,Swapchain &swapchain, const std::string &path, VkPipelineLayout pipelineLayout, const VkRenderPass &renderPass);
+		Shader(Device &device,Swapchain &swapchain, const std::string &path,VkPipelineLayout &pipelineLayout, const VkRenderPass &renderPass);
 		ShaderInfo getShaderInfo() { return shaderInfo; }
 		VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
+		void bind(VkCommandBuffer commandBuffer);
+		void pushConstants(VkCommandBuffer commandBuffer, size_t size, const PushConstantData &model);
 		~Shader();
 	private:
 		static std::vector<char> readFile(const std::string& filename);
 		VkShaderModule createShaderModule(const std::vector<char>& code);
 
 		VkPipeline graphicsPipeline;
+		VkPipelineLayout &pipelineLayout;
 
 		Device& device;
 		Swapchain& swapchain;

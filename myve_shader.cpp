@@ -4,7 +4,7 @@
 
 namespace myve
 {
-    Shader::Shader(Device &device,Swapchain &swapchain, const std::string& path, VkPipelineLayout pipelineLayout, const VkRenderPass &renderPass) : device{ device }, swapchain{swapchain}
+    Shader::Shader(Device& device, Swapchain& swapchain, const std::string& path, VkPipelineLayout& pipelineLayout, const VkRenderPass& renderPass) : device{ device }, swapchain{ swapchain }, pipelineLayout {pipelineLayout}
     {
         auto vertShaderCode = readFile(path + ".vert.spv");
         auto fragShaderCode = readFile(path + ".frag.spv");
@@ -100,16 +100,6 @@ namespace myve
         colorBlending.blendConstants[2] = 0.0f;
         colorBlending.blendConstants[3] = 0.0f;
 
-        /*VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-        pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &ubo->getSetLayout();
-        pipelineLayoutInfo.pushConstantRangeCount = 0;
-
-        if (vkCreatePipelineLayout(device.getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create pipeline layout!");
-        }*/
-
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
@@ -133,7 +123,14 @@ namespace myve
         vkDestroyShaderModule(device.getDevice(), fragShaderModule, nullptr);
         vkDestroyShaderModule(device.getDevice(), vertShaderModule, nullptr);
     }
- 
+    void Shader::pushConstants(VkCommandBuffer commandBuffer, size_t size, const PushConstantData &data)
+    {
+        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, &data);
+    }
+    void Shader::bind(VkCommandBuffer commandBuffer)
+    {
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    }
     VkShaderModule Shader::createShaderModule(const std::vector<char>& code)
     {
         VkShaderModuleCreateInfo createInfo{};

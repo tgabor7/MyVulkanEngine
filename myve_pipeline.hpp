@@ -6,7 +6,7 @@
 #include "myve_ubo.hpp"
 #include <chrono>
 #include "myve_game_object.hpp"
-
+#include "myve_mesh_renderer.hpp"
 namespace myve
 {
 	class Pipeline {
@@ -14,15 +14,12 @@ namespace myve
 		Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window);
 		void drawFrame();
 		void init();
-		void addGameObject(GameObject& gameObject);
 		void cleanUp();
 		void recreateSwapChain();
 		bool framebufferResized = false;
 		
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
 		
-		std::vector<GameObject> gameObjects;
-
 		~Pipeline();
 
 	private:
@@ -71,5 +68,6 @@ namespace myve
 		std::unique_ptr<Shader> shader;
 		std::unique_ptr<Shader> another_shader;
 		size_t currentFrame = 0;
+		std::unique_ptr<MeshRenderer> mesh_renderer;
 	};
 }

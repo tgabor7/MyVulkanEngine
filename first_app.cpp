@@ -3,6 +3,7 @@
 #include <memory>
 #include "myve_scene.hpp"
 #include "input_handler.hpp"
+#include <iostream>
 
 namespace myve 
 {
@@ -13,7 +14,7 @@ namespace myve
 	void FirstApp::update()
 	{
         
-        Mouse m = InputHandler::getMouseD();
+       
 
 	}
 	void FirstApp::loadResources()

@@ -10,44 +10,31 @@ namespace myve
 	void Pipeline::init()
 	{
 		createRenderPass();
-
-		for (auto& gameObject : gameObjects) {
-			gameObject.ubo->createDescriptorSetLayout();
-		}
-
+		
 		//ubo.createDescriptorSetLayout();
 
-		createPipeline();
+		//createPipeline();
 
 		device.createCommandPool();
 		createColorResources();
 		createDepthResources();
 		createFramebuffers();
-		for (auto& gameObject : gameObjects) {
-			gameObject.ubo->texture.createTextureImage();
-			gameObject.ubo->texture.createTextureImageView();
-			gameObject.ubo->texture.createTextureSampler();
+		
 
-			gameObject.vbo->createVertexBuffer();
-			gameObject.vbo->createIndexBuffer();
-
-			gameObject.ubo->createUniformBuffers();
-			gameObject.ubo->createDescriptorPool();
-			gameObject.ubo->createDescriptorSets();
-
-		}
+		mesh_renderer = std::make_unique<MeshRenderer>("shaders/simple_shader", device, swapchain, renderPass);
 
 		createCommandBuffers();
 		createSyncObjects();
+
+		InputHandler::init(window);
+
+
 		glfwSetWindowUserPointer(window, this);
 	}
 	Pipeline::Pipeline(Device& device, Swapchain& swapchain, GLFWwindow* window) : device{ device }, swapchain{ swapchain }, window{ window }
 	{
 	}
-	void Pipeline::addGameObject(GameObject& gameObject)
-	{
-		gameObjects.push_back(gameObject);
-	}
+	
 	void Pipeline::framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 		auto app = reinterpret_cast<Pipeline*>(glfwGetWindowUserPointer(window));
 		app->framebufferResized = true;
@@ -91,13 +78,7 @@ namespace myve
 		createColorResources();
 		createDepthResources();
 		createFramebuffers();
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject.ubo->createUniformBuffers();
-			gameObject.ubo->createDescriptorPool();
-			gameObject.ubo->createDescriptorSets();
-
-		}
+		
 		
 		createCommandBuffers();
 
@@ -150,10 +131,16 @@ namespace myve
 		}
 		imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
-		for (auto& gameObject : gameObjects)
+		//mesh_renderer->draw(commandBuffers[imageIndex], imageIndex);
+
+		mesh_renderer->update(commandBuffers[imageIndex], imageIndex); // also add dt as parameter
+
+
+
+		/*for (auto& gameObject : gameObjects)
 		{
 			gameObject.ubo->update(imageIndex, swapchain.getExtent(), gameObject.transformation.getMatrix());
-		}
+		}*/
 
 		VkSubmitInfo submitInfo{};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -350,18 +337,20 @@ namespace myve
 
 			vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader->getGraphicsPipeline());
+			//shader->bind(commandBuffers[i]);
+			//for (auto& gameObject : gameObjects)
+			//{
+			//	gameObject.vbo->bind(commandBuffers[i]);
 
-			for (auto& gameObject : gameObjects)
-			{
-				gameObject.vbo->bind(commandBuffers[i]);
+			//	gameObject.ubo->bind(commandBuffers[i], pipelineLayout, i);
 
-				gameObject.ubo->bind(commandBuffers[i], pipelineLayout, i);
+			//	//vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+			//	vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(gameObject.vbo->getIndexCount()), 1, 0, 0, 0);
+			//}
+			//
+			mesh_renderer->draw(commandBuffers[i], i);
 
-				//vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
-				vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(gameObject.vbo->getIndexCount()), 1, 0, 0, 0);
-			}
-			
+
 			vkCmdEndRenderPass(commandBuffers[i]);
 
 			if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
@@ -409,24 +398,7 @@ namespace myve
 	}
 	void Pipeline::createPipeline()
 	{
-
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(gameObjects.size()); // Optional
-		std::vector<VkDescriptorSetLayout> layouts(gameObjects.size());
-		for (uint32_t i = 0;i<gameObjects.size();++i)
-		{
-			layouts[i] = gameObjects[i].ubo->getSetLayout();
-		}
-
-		pipelineLayoutInfo.pSetLayouts = layouts.data();
-
-		if (vkCreatePipelineLayout(device.getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create pipeline layout!");
-		}
-
-		shader = std::make_unique<Shader>(device, swapchain, "shaders/simple_shader", pipelineLayout, renderPass);
-		//another_shader = std::make_unique<Shader>(device, swapchain, "shaders/another_shader", pipelineLayout, &renderPass, &graphicsPipeline);
+		
 
 	}
 	void Pipeline::cleanUp()

@@ -22,7 +22,8 @@ namespace myve
 		void createDescriptorPool();
 		void createDescriptorSets();
 		void bind(VkCommandBuffer commandBuffer,VkPipelineLayout pipelineLayout, uint32_t currentImage);
-		void update(uint32_t currentImage, VkExtent2D swapChainExtent, glm::mat4 model);
+		void update(uint32_t currentImage, const UniformBufferObject &ubo);
+		void changeTexture(Texture& texture);
 
 		VkDescriptorSetLayout &getSetLayout() { return descriptorSetLayout; }
 		Texture& texture;

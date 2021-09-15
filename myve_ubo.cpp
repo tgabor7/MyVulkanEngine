@@ -67,49 +67,14 @@ namespace myve
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
-    void UBO::update(uint32_t currentImage, VkExtent2D swapChainExtent, glm::mat4 model)
+    void UBO::update(uint32_t currentImage,const UniformBufferObject &ubo)
     {
-        static auto startTime = std::chrono::high_resolution_clock::now();
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
-        if (InputHandler::isKeyDown(GLFW_KEY_A)) {
-            c.translate({ -sin(c.yaw) * cos(c.pitch) * .1f,cos(c.yaw) * cos(c.pitch) * .1f, 0.f });
-
-        }
-        if (InputHandler::isKeyDown(GLFW_KEY_D)) {
-            c.translate({ sin(c.yaw) * cos(c.pitch) * .1f,-cos(c.yaw) * cos(c.pitch) * .1f, 0.f });
-        }
-        if (InputHandler::isKeyDown(GLFW_KEY_S)) {
-            c.translate({ -cos(c.yaw) * cos(c.pitch) * .1f, -sin(c.yaw) * cos(c.pitch) * .1f, 0.f });
-        }
-        if (InputHandler::isKeyDown(GLFW_KEY_W)) {
-            c.translate({ cos(c.yaw) * cos(c.pitch) * .1f, sin(c.yaw) * cos(c.pitch) * .1f, 0.f });
-        }
-        if (InputHandler::isKeyDown(GLFW_KEY_E)) {
-            c.translate({ 0.f,0.f, .1f });
-        }
-        if (InputHandler::isKeyDown(GLFW_KEY_Q)) {
-            c.translate({ 0.f,0.f, -.1f });
-
-        }
-
-        UniformBufferObject ubo{};
-        
-        ubo.model = model;
-        
-        ubo.view = c.getViewMatrix();
-        
-        ubo.proj = c.getProjectionMatrix(1.0f, 0.01f, 10.0f);
-
         void* data;
         vkMapMemory(device.getDevice(), uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
-	std::memcpy(data, &ubo, sizeof(ubo));
+	    std::memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device.getDevice(), uniformBuffersMemory[currentImage]);
 
-        InputHandler::update();
-
+        //InputHandler::update();
     }
     void UBO::bind(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, uint32_t currentImage)
     {
@@ -129,6 +94,40 @@ namespace myve
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
+        for (size_t i = 0; i < swapchain.getSwapChainImageCount(); i++) {
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = uniformBuffers[i];
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(UniformBufferObject);
+
+            VkDescriptorImageInfo imageInfo{};
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            imageInfo.imageView = texture.getImageView();
+            imageInfo.sampler = texture.getSampler();
+
+            std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
+
+            descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[0].dstSet = descriptorSets[i];
+            descriptorWrites[0].dstBinding = 0;
+            descriptorWrites[0].dstArrayElement = 0;
+            descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            descriptorWrites[0].descriptorCount = 1;
+            descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+            descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            descriptorWrites[1].dstSet = descriptorSets[i];
+            descriptorWrites[1].dstBinding = 1;
+            descriptorWrites[1].dstArrayElement = 0;
+            descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+            descriptorWrites[1].descriptorCount = 1;
+            descriptorWrites[1].pImageInfo = &imageInfo;
+
+            vkUpdateDescriptorSets(device.getDevice(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        }
+    }
+    void UBO::changeTexture(Texture& texture)
+    {
         for (size_t i = 0; i < swapchain.getSwapChainImageCount(); i++) {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[i];

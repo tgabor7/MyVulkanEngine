@@ -1,5 +1,9 @@
-  #version 450
-
+#version 450
+layout(push_constant) uniform Push {
+	mat4 model;
+	mat4 render_matrix;
+	
+} push;
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
@@ -14,7 +18,7 @@ layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec2 fragTexCoord;
 
 void main() {
-    gl_Position = ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
+    gl_Position = ubo.proj * ubo.view * push.model * vec4(inPosition, 1.0);
     fragColor = inColor;
     fragTexCoord = inTexCoord;
 }
