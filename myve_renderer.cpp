@@ -30,6 +30,10 @@ namespace myve
 	Renderer::~Renderer()
 	{
 	}
+	bool Renderer::shouldClose()
+	{
+		return window.shouldClose();
+	}
 	void Renderer::draw()
 	{
 		window.pollEvents();

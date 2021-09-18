@@ -19,6 +19,8 @@ namespace myve
 		void init();
 		void cleanUp();
 
+		bool shouldClose();
+
 		void draw();
 
 		void createGameObject();

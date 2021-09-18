@@ -10,7 +10,7 @@ namespace myve
 		loadResources();
 		renderer.init();
 
-		while (inflight) {
+		while (!renderer.shouldClose()) {
 			renderer.draw();
 			update();
 		}

@@ -3,7 +3,7 @@
 
 namespace myve {
 
-	class FirstApp : public Scene{
+	class FirstApp : public Scene {
 	public:
 		FirstApp();
 		void update();
