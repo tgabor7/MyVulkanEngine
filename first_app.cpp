@@ -13,8 +13,6 @@ namespace myve
 	}
 	void FirstApp::update()
 	{
-        
-       
 
 	}
 	void FirstApp::loadResources()

@@ -11,6 +11,8 @@ namespace myve
 		virtual void draw(const VkCommandBuffer& commandBuffer, uint32_t currentImage) = 0;
 		virtual void initialize() = 0;
 
+		void cleanUp();
+
 		~SimpleRenderer();
 	protected:
 

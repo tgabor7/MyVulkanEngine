@@ -172,6 +172,6 @@ namespace myve
     }
 	UBO::~UBO()
 	{
-
+        cleanUp();
 	}
 }

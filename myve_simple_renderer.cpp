@@ -39,6 +39,10 @@ namespace myve
 
 		//initialize();
 	}
+	void SimpleRenderer::cleanUp()
+	{
+		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
+	}
 	SimpleRenderer::~SimpleRenderer()
 	{
 	}

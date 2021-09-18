@@ -41,13 +41,20 @@ namespace myve
 	}
 	void Pipeline::cleanUpSwapchain()
 	{
+		vkDestroyImage(device.getDevice(), colorImage, nullptr);
+		vkDestroyImageView(device.getDevice(), colorImageView, nullptr);
+		vkFreeMemory(device.getDevice(), colorImageMemory, nullptr);
+
+		vkDestroyImage(device.getDevice(), depthImage, nullptr);
+		vkDestroyImageView(device.getDevice(), depthImageView, nullptr);
+		vkFreeMemory(device.getDevice(), depthImageMemory, nullptr);
+
 		for (size_t i = 0; i < swapChainFramebuffers.size(); i++) {
 			vkDestroyFramebuffer(device.getDevice(), swapChainFramebuffers[i], nullptr);
 		}
 
 		vkFreeCommandBuffers(device.getDevice(), device.getCommandPool(), static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
 		vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
 
 		for (size_t i = 0; i < swapchain.getSwapChainImageCount(); i++) {
@@ -68,20 +75,22 @@ namespace myve
 		}
 
 		vkDeviceWaitIdle(device.getDevice());
-
+		
 		cleanUpSwapchain();
 
 		swapchain.createSwapchain();
 		swapchain.createImageViews();
 		createRenderPass();
-		createPipeline();
+		//createPipeline();
 		createColorResources();
 		createDepthResources();
 		createFramebuffers();
-		
-		
-		createCommandBuffers();
 
+		mesh_renderer->cleanUp();
+		mesh_renderer = std::make_unique<MeshRenderer>("shaders/simple_shader", device, swapchain, renderPass);
+
+		createCommandBuffers();
+		
 		imagesInFlight.resize(swapchain.getSwapChainImageCount(), VK_NULL_HANDLE);
 
 	}
@@ -426,7 +435,7 @@ namespace myve
 			vkDestroyFramebuffer(device.getDevice(), framebuffer, nullptr);
 		}
 
-		vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
+		//vkDestroyPipelineLayout(device.getDevice(), pipelineLayout, nullptr);
 		vkDestroyRenderPass(device.getDevice(), renderPass, nullptr);
 	}
 }

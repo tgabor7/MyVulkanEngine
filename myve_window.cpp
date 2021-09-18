@@ -36,7 +36,7 @@ namespace myve {
 
 		window = glfwCreateWindow(WIDTH, HEIGHT, "My Vulkan Engine!", nullptr, nullptr);
 
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 		glfwSetFramebufferSizeCallback(window, Pipeline::framebufferResizeCallback);
 	}

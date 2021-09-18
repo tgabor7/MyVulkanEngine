@@ -227,6 +227,6 @@ namespace myve
 	}
 	Texture::~Texture()
 	{
-
+        cleanUp();
 	}
 }
