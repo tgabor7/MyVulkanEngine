@@ -1,4 +1,0 @@
-C:/Users/tgabo/Desktop/repos/MyVulkanEngine/CMakeFiles/INSTALL.dir
-C:/Users/tgabo/Desktop/repos/MyVulkanEngine/CMakeFiles/main.dir
-C:/Users/tgabo/Desktop/repos/MyVulkanEngine/CMakeFiles/ALL_BUILD.dir
-C:/Users/tgabo/Desktop/repos/MyVulkanEngine/CMakeFiles/ZERO_CHECK.dir
