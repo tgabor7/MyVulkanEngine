@@ -123,9 +123,9 @@ namespace myve
         vkDestroyShaderModule(device.getDevice(), fragShaderModule, nullptr);
         vkDestroyShaderModule(device.getDevice(), vertShaderModule, nullptr);
     }
-    void Shader::pushConstants(VkCommandBuffer commandBuffer, size_t size, const PushConstantData &data)
+    void Shader::pushConstants(VkCommandBuffer commandBuffer, size_t size, const void* data)
     {
-        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, &data);
+        vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, size, data);
     }
     void Shader::bind(VkCommandBuffer commandBuffer)
     {

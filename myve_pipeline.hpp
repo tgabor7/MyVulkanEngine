@@ -7,6 +7,8 @@
 #include <chrono>
 #include "myve_game_object.hpp"
 #include "myve_mesh_renderer.hpp"
+#include "myve_sprite_renderer.hpp"
+
 namespace myve
 {
 	class Pipeline {
@@ -67,5 +69,6 @@ namespace myve
 		GLFWwindow* window;
 		size_t currentFrame = 0;
 		std::unique_ptr<MeshRenderer> mesh_renderer;
+		std::unique_ptr<SpriteRenderer> sprite_renderer;
 	};
 }

@@ -22,6 +22,7 @@ namespace myve
 		
 
 		mesh_renderer = std::make_unique<MeshRenderer>("shaders/simple_shader", device, swapchain, renderPass);
+		sprite_renderer = std::make_unique<SpriteRenderer>("shaders/sprite_shader", device, swapchain, renderPass);
 
 		createCommandBuffers();
 		createSyncObjects();

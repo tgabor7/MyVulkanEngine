@@ -28,7 +28,7 @@ namespace myve
 		ShaderInfo getShaderInfo() { return shaderInfo; }
 		VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
 		void bind(VkCommandBuffer commandBuffer);
-		void pushConstants(VkCommandBuffer commandBuffer, size_t size, const PushConstantData &model);
+		void pushConstants(VkCommandBuffer commandBuffer, size_t size, const void *model);
 		~Shader();
 	private:
 		static std::vector<char> readFile(const std::string& filename);

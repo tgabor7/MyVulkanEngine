@@ -42,7 +42,7 @@ namespace myve
 		{
 			PushConstantData d;
 			d.model = m.transformation.getMatrix();
-			shader->pushConstants(commandBuffer, sizeof(PushConstantData), d);
+			shader->pushConstants(commandBuffer, sizeof(PushConstantData), (void*)&d);
 
 			m.bind(commandBuffer);
 			m.draw(commandBuffer);
