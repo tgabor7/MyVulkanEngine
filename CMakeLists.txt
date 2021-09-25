@@ -20,5 +20,6 @@ include_directories("libraries/VulkanSDK/Include")
 include_directories("libraries/glfw/include")
 include_directories("libraries/glm/include")
 include_directories("libraries/tinyobjectloader")
+include_directories("libraries/entt")
 
 install(TARGETS main DESTINATION bin)
